@@ -124,6 +124,7 @@ namespace csharpcore
         public override void AdjustSellIn(ItemProxy item)
         {
             item.DecrementSellIn();
+            item.IncrementQuality();
         }
 
         public override void AdjustQualityForNegativeSellIn(ItemProxy item)
