@@ -10,19 +10,37 @@ namespace csharpcore
     {
         public abstract bool IsMatch(ItemProxy item);
 
-        public abstract void UpdateItem(ItemProxy item);
+        public void UpdateItem(ItemProxy item)
+        {
+            AdjustQuality(item);
+
+            AdjustSellIn(item);
+
+            if (item.SellIn < 0)
+            {
+                AdjustQualityForNegativeSellIn(item);
+            }
+        }
+        public abstract void AdjustQuality(ItemProxy item);
+        public abstract void AdjustSellIn(ItemProxy item);
+        public abstract void AdjustQualityForNegativeSellIn(ItemProxy item);
     }
 
     public class NormalItemRule : RuleBase
     {
-        public override void UpdateItem(ItemProxy item)
+        public override void AdjustQuality(ItemProxy item)
         {
             item.DecrementQuality();
+        }
+
+        public override void AdjustSellIn(ItemProxy item)
+        {
             item.DecrementSellIn();
-            if (item.SellIn < 0)
-            {
-                item.DecrementQuality();
-            }
+        }
+
+        public override void AdjustQualityForNegativeSellIn(ItemProxy item)
+        {
+            item.DecrementQuality();
         }
 
         public override bool IsMatch(ItemProxy item)
@@ -38,18 +56,21 @@ namespace csharpcore
             return item.Name == "Conjured Mana Cake";
         }
 
-        public override void UpdateItem(ItemProxy item)
+        public override void AdjustQuality(ItemProxy item)
         {
             item.DecrementQuality();
             item.DecrementQuality();
-            
-            item.DecrementSellIn();
+        }
 
-            if (item.SellIn < 0)
-            {
-                item.DecrementQuality();
-                item.DecrementSellIn();
-            }
+        public override void AdjustSellIn(ItemProxy item)
+        {
+            item.DecrementSellIn();
+        }
+
+        public override void AdjustQualityForNegativeSellIn(ItemProxy item)
+        {
+            item.DecrementQuality();
+            item.DecrementSellIn();
         }
     }
 
@@ -60,7 +81,7 @@ namespace csharpcore
             return item.Name == "Backstage passes to a TAFKAL80ETC concert";
         }
 
-        public override void UpdateItem(ItemProxy item)
+        public override void AdjustQuality(ItemProxy item)
         {
             item.IncrementQuality();
             if (item.SellIn < 11)
@@ -72,8 +93,15 @@ namespace csharpcore
             {
                 item.IncrementQuality();
             }
-            item.DecrementSellIn();
+        }
 
+        public override void AdjustSellIn(ItemProxy item)
+        {
+            item.DecrementSellIn();
+        }
+
+        public override void AdjustQualityForNegativeSellIn(ItemProxy item)
+        {
             if (item.SellIn < 0)
             {
                 item.ResetQuality();
@@ -88,23 +116,43 @@ namespace csharpcore
             return item.Name == "Aged Brie";
         }
 
-        public override void UpdateItem(ItemProxy item)
+        public override void AdjustQuality(ItemProxy item)
         {
             item.IncrementQuality();
+        }
+
+        public override void AdjustSellIn(ItemProxy item)
+        {
             item.DecrementSellIn();
+        }
+
+        public override void AdjustQualityForNegativeSellIn(ItemProxy item)
+        {
+            item.IncrementQuality();
         }
     }
 
     public class SulfurasRule : RuleBase
     {
-        public override void UpdateItem(ItemProxy item)
-        {
-           //nada
-        }
 
         public override bool IsMatch(ItemProxy item)
         {
             return item.Name == "Sulfuras, Hand of Ragnaros";
+        }
+
+        public override void AdjustQuality(ItemProxy item)
+        {
+            //
+        }
+
+        public override void AdjustSellIn(ItemProxy item)
+        {
+            //
+        }
+
+        public override void AdjustQualityForNegativeSellIn(ItemProxy item)
+        {
+            //
         }
     }
 }
