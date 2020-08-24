@@ -92,6 +92,7 @@ namespace csharpcore
         {
             item.IncrementQuality();
             item.DecrementSellIn();
+            item.IncrementQuality();
         }
     }
 
